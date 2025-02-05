@@ -43,6 +43,7 @@ import { ToastContainer } from 'react-toastify';
 import LazyLoader from './utils/LazyLoader';
 import { AuthProvider } from './contexts/AuthContext';
 import AuthWrapper from './routes/AuthWrapper';
+import AcademicSession from './components/';
 
 function App() {
   return (
@@ -67,6 +68,7 @@ function App() {
               <Route path='personCategory' element={<GetPersonCategory />} />
               <Route path='office' element={<GetOffice />}  />
               <Route path='person' element={<GetPerson />}  />
+              <Route path='AcademicSession' element={<AcademicSession/>}/>
 
               {/* For Setting */}
               <Route path='setting/'>
