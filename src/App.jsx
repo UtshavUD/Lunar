@@ -43,7 +43,7 @@ import { ToastContainer } from 'react-toastify';
 import LazyLoader from './utils/LazyLoader';
 import { AuthProvider } from './contexts/AuthContext';
 import AuthWrapper from './routes/AuthWrapper';
-import AcademicSession from './components/';
+import AcademicSession from './components/AcademicSession/GetAcademic';
 
 function App() {
   return (
