@@ -4,10 +4,10 @@ import customAxios from '../../utils/http';
 import { showToast } from '../../utils/ReactToast';
 import handleCatchError from '../../utils/handleCatchError';
 import DeleteItem from '../DeleteItem';
-import UpdateOffice from './UpdateAcademic';
-import SeeAllOffice from './SeeAllAcademic';
+import UpdateSession from './UpdateAcademic';
+import SeeAllSession from './SeeAllAcademic';
 
-function OfficeTableRow({ index, data, setOriginalData }) {
+function AcademicTableRow({ index, data, setOriginalData }) {
   const navigate = useNavigate();
   const [isBeingProcessed, setIsBeingProcessed] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -31,11 +31,11 @@ function OfficeTableRow({ index, data, setOriginalData }) {
   const deleteHandle = async () => {
     try {
       setIsBeingProcessed(true);
-      const response = await customAxios.delete(`/office/Block/${data.OfficeId}`);
+      const response = await customAxios.delete(`/Academic/Block/${data.AcademicId}`);
       if (response.status == 200) {
         // Remove the deleted data from originalData
         setOriginalData((prev) =>
-          prev.filter((item) => item.OfficeId !== data.OfficeId)
+          prev.filter((item) => item.AcademicId !== data.SessionId)
         );
 
         handleModal();
@@ -53,19 +53,19 @@ function OfficeTableRow({ index, data, setOriginalData }) {
   const updateHandle = async (formData) => {
     try {
       setIsBeingProcessed(true);
-      const response = await customAxios.put('/office/update', formData);
+      const response = await customAxios.put('/AcademicSession/Update', formData);
       if (response.status == 200) {
         const updatedData = await response.data;
 
         // Update the originalData with the updated entry
         setOriginalData((prev) =>
           prev.map((item) =>
-            item.OfficeId === updatedData.OfficeId ? updatedData : item
+            item.SessionId === updatedData.SessionId ? updatedData : item
           )
         );
 
         handleEditModal();
-        showToast("Office Updated Successfully", "success");
+        showToast("Acaddemic Updated Successfully", "success");
       }
     } catch (error) {
       handleCatchError(error, navigate);
@@ -78,19 +78,25 @@ function OfficeTableRow({ index, data, setOriginalData }) {
   return (
     <>
       <tr>
-        <td className="px-3 py-2 whitespace-nowrap">{index + 1}</td>
+        <td className="px-3 py-5 whitespace-nowrap">{index + 1}</td>
         <td className="px-3 py-2 text-ellipsis whitespace-nowrap">
-          {data?.OfficeName?.length > 15 ? (`${data?.OfficeName.slice(0, 15)} ...`) : (data?.OfficeName)}
-        </td>
+          {data?.SessionName?.length > 15 ? (`${data?.SessionName.slice(0, 15)} ...`) : (data?.SessionName)}</td>
+          
         <td className="px-3 py-2 text-ellipsis whitespace-nowrap">
-          {data?.OfficeAddress?.length > 15 ? (`${data?.OfficeAddress.slice(0, 15)} ...`) : (data?.OfficeAddress)}
+          {data?.SessionStartDate?.length > 15 ? (`${data?.SessionStartDate.slice(0, 15)} ...`) : (data?.SessionStartDate)}
         </td>
+
         <td className="px-3 py-2 text-ellipsis whitespace-nowrap">
-          {data?.OfficeEmail?.length > 15 ? (`${data?.OfficeEmail.slice(0, 15)} ...`) : (data?.OfficeEmail)}
+          {data?.SessionStartDateBs?.length > 15 ? (`${data?.SessionStartDateBs.slice(0, 15)} ...`) : (data?.SessionStartDateBs)}
         </td>
-        <td className="px-3 py-2 whitespace-nowrap">{data?.OfficePhonePrimary}</td>
+        <td className="px-3 py-2 whitespace-nowrap">{data?.SessionEndDate}</td>
+        <td className="px-3 py-2 whitespace-nowrap">{data?.SessionEndDateBs}</td>
+
         <td className="px-3 py-2 whitespace-nowrap ">
-          <span className={`p-4 w-full inline-flex justify-center text-base leading-5 font-semibold rounded-full ${data.IsActive ? 'bg-green-100' : 'bg-red-200'} text-black`}>{data.IsActive ? "Active" : "Blocked"}</span>
+          <span className={`p-4 w-full inline-flex justify-end text-base leading-5 font-semibold rounded-full ${data.IsActive ? 'bg-green-100' : 'bg-red-200'} text-black`}>{data.IsActive ? "Active" : "Blocked"}</span>
+        </td>
+        <td className="px-3 py-2 whitespace-nowrap">
+          {data?.IsCurrentSession}
         </td>
         <td className="px-3 py-2 whitespace-nowrap">
           {
@@ -104,13 +110,13 @@ function OfficeTableRow({ index, data, setOriginalData }) {
             )
           }
           {
-            data.IsActive && (
+            data.IsActive && 
               <button
                 title="Block"
                 onClick={handleModal}
                 className={`ml-2 px-2 py-1 font-medium text-white bg-red-600 rounded-md hover:bg-red-500 focus:outline-none focus:shadow-outline-red active:bg-red-600 transition duration-150 ease-in-out`}>
                 <i className='bx bx-block text-2xl' ></i>
-              </button>)
+              </button>
           }
           {/* See all details */}
           <button title="See Details" onClick={handleSeeAllModal} className={`ml-2 px-2 py-1 font-medium text-white bg-green-600 rounded-md hover:bg-green-500 focus:outline-none focus:shadow-outline-green active:bg-green-600 transition duration-150 ease-in-out`}><i className='bx bx-info-circle text-2xl' ></i></button>
@@ -120,17 +126,17 @@ function OfficeTableRow({ index, data, setOriginalData }) {
       </tr>
       <tr>
         {isModalOpen && <td>
-          <DeleteItem handleModal={handleModal} deleteHandle={deleteHandle} name={data?.OfficeName} isBeingProcessed={isBeingProcessed} />
+          <DeleteItem handleModal={handleModal} deleteHandle={deleteHandle} name={data?.SessionName} isBeingProcessed={isBeingProcessed} />
         </td>
         }
 
         {isEditModalOpen && <td>
-          <UpdateOffice handleEditModal={handleEditModal} data={data} updateHandle={updateHandle} isBeingProcessed={isBeingProcessed} />
+          <UpdateSession handleEditModal={handleEditModal} data={data} updateHandle={updateHandle} isBeingProcessed={isBeingProcessed} />
         </td>
         }
 
         {isSeeAllModalOpen && <td>
-          <SeeAllOffice index={index} handleSeeAllModal={handleSeeAllModal} data={data} />
+          <SeeAllSession index={index} handleSeeAllModal={handleSeeAllModal} data={data} />
         </td>
         }
       </tr>
@@ -138,4 +144,4 @@ function OfficeTableRow({ index, data, setOriginalData }) {
   )
 }
 
-export default OfficeTableRow
+export default AcademicTableRow;
