@@ -75,7 +75,7 @@ const Sidebar = () => {
               }`
             } 
           >
-            <i className="bx bx-male-female mr-2 text-2xl" />
+            <i className="bx bx-book-open mr-2 text-2xl" />
              Academic
           </NavLink>
 

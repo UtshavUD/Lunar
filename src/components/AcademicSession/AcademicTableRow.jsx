@@ -69,7 +69,7 @@ function AcademicTableRow({ index, data, setOriginalData,refetch}) {
         );
 
         handleEditModal();
-        showToast("Acaddemic Updated Successfully", "success");
+        showToast("Session Updated Successfully", "success");
       }
     } catch (error) {
       handleCatchError(error, navigate);
@@ -86,11 +86,12 @@ function AcademicTableRow({ index, data, setOriginalData,refetch}) {
         const response = await customAxios.put('/AcademicSession/SetCurrentSession/'+id);
         
         if (response.status === 200) {
-            const updatedData = response.data; 
+            
             // updateAcademicSession(updatedData); // Ensure this function exists and updates state properly
             showToast("Session switched successfully!", "success");
             setEditModalOpen(!isEditModalOpen)
             refetch();
+            
         }
     } catch (error) {
         console.error("Error switching session:", error.response?.data || error.message);

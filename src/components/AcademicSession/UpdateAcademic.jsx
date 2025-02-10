@@ -64,7 +64,7 @@ function UpdateAcademic({ handleEditModal, data, updateHandle, switchSession }) 
                         <h1 className="text-2xl font-bold text-center text-gray-800 mb-6">
                             Update Academic Session
                         </h1>
-                        <form className="flex flex-col gap-6" onSubmit={submitUpdate}>
+                        <form className="flex flex-col gap-6">
                             {formFields.map((field) => (
                                 <div key={field.name} className={`md:col-span-${field.colSpan}`}>
                                     <label htmlFor={field.name} className="block text-lg font-medium text-gray-800 mb-1">
@@ -85,17 +85,14 @@ function UpdateAcademic({ handleEditModal, data, updateHandle, switchSession }) 
 
                             {/* Switch Session Button */}
                             <div className="md:col-span-2 flex flex-wrap justify-between gap-4">
-                                {isBeingProcessed ? (
-                                    <CLoader />
-                                ) : (
                                     <button
                                         type="button"
                                         onClick={handleSwitchSession}
-                                        className="px-6 py-3 bg-blue-900 text-white text-sm rounded-lg shadow-lg hover:bg-green-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all duration-300"
-                                    >
+                                        className="px-6 py-3 flex items-center gap-1 bg-blue-900 text-white text-md rounded-lg shadow-lg hover:bg-green-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all duration-300"
+                                    ><i class='bx bx-toggle-left text-lg'></i>
                                         Switch
                                     </button>
-                                )}
+                                
 
                                 {/* Action Buttons */}
                                 <div>
@@ -104,8 +101,9 @@ function UpdateAcademic({ handleEditModal, data, updateHandle, switchSession }) 
                                     ) : (
                                         <button
                                             type="submit"
-                                            className="px-6 py-3 bg-blue-900 text-white text-sm rounded-lg shadow-lg hover:bg-green-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all duration-300"
-                                        >
+                                            onClick={submitUpdate}
+                                            className="flex items-center gap-1 px-6 py-3 bg-blue-900 text-white text-md rounded-lg shadow-lg hover:bg-green-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all duration-300"
+                                        ><i class='bx bx-upload text-lg'></i>
                                             Update
                                         </button>
                                     )}
