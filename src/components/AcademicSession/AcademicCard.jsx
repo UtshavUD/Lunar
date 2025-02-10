@@ -4,8 +4,8 @@ import customAxios from "../../utils/http";
 import { showToast } from "../../utils/ReactToast";
 import handleCatchError from "../../utils/handleCatchError";
 import DeleteItem from "../DeleteItem";
-import UpdateOffice from './UpdateAcademic';
-import SeeAllOffice from './SeeAllAcademic';
+import UpdateAcademic from './UpdateAcademic';
+import SeeAllAcademic from './SeeAllAcademic';
 
 function AcademicCard({ index, data, setOriginalData }) {
   const navigate = useNavigate();
@@ -76,17 +76,19 @@ function AcademicCard({ index, data, setOriginalData }) {
   };
 
   return (
-    <>
+    <div>
       {/* Document Group Card */}
-      <div className={`p-6 m-4 bg-white border rounded-lg shadow-md hover:shadow-lg transition-all duration-300 `}>
+      <div className={`${data.IsCurrentSession ? 'bg-red-300' : ''} p-6 m-4 bg-white border rounded-lg shadow-md hover:shadow-lg transition-all duration-300`}>
         <h3 className="text-2xl font-semibold text-gray-800">
-          {(`${index + 1}.   ${data?.SessionId}`)}
+          {(`${index + 1}.   ${data?.SessionName}`)}
         </h3>
         {/* For only viewAll */}
 
-        <div className="mt-4">
+        <div className="mt-4 flex flex-col gap-2">
+        <span className="flex text-nowrap gap-2 font-semibold text-sky-900">Start Date(B.S)/(A.D):<h1 className="font-medium text-black">{(`${data?.SessionStartDateBs}`)}/{(`${data?.SessionStartDate}`)}</h1></span>
+        <span className="flex text-nowrap gap-2 font-semibold text-sky-900">End Date(B.S)/(A.D):<h1 className="font-medium text-black">{(`${data?.SessionEndDateBs}`)}/{(`${data?.SessionEndDate}`)}</h1></span>
           <span
-            className={`inline-block px-4 py-1 rounded-full text-white text-sm font-medium ${data.IsActive ? "bg-green-500" : "bg-red-500"
+            className={`inline-block w-fit px-4 mt-2 rounded-full text-white text-sm font-medium ${data.IsActive ? "bg-green-500" : "bg-red-500"
               }`}
           >
             {data.IsActive ? "Active" : "Blocked"}
@@ -130,13 +132,13 @@ function AcademicCard({ index, data, setOriginalData }) {
         <DeleteItem handleModal={handleModal} deleteHandle={deleteHandle} name={data?.OfficeName} isBeingProcessed={isBeingProcessed} />
       }
       {isEditModalOpen &&
-        <UpdateOffice handleEditModal={handleEditModal} data={data} updateHandle={updateHandle} isBeingProcessed={isBeingProcessed} />
+        <UpdateAcademic handleEditModal={handleEditModal} data={data} updateHandle={updateHandle} isBeingProcessed={isBeingProcessed} />
       }
 
       {isSeeAllModalOpen &&
-        <SeeAllOffice index={index} handleSeeAllModal={handleSeeAllModal} data={data} />
+        <SeeAllAcademic index={index} handleSeeAllModal={handleSeeAllModal} data={data} />
       }
-    </>
+    </div>
   );
 }
 

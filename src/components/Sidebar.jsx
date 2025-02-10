@@ -1,6 +1,8 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
 
+
+
 const Sidebar = () => {
 
   return (
@@ -66,14 +68,15 @@ const Sidebar = () => {
           </NavLink>
 
           <NavLink
+          
             to="/AcademicSession"
             className={({ isActive }) =>
               `flex items-center cursor-pointer py-4 transition-all text-[15px] duration-300 hover:translate-x-1 ${isActive ? "text-indigo-800 font-bold text-[15px]" : "text-gray-600"
               }`
-            }
+            } 
           >
             <i className="bx bx-male-female mr-2 text-2xl" />
-            Academic
+             Academic
           </NavLink>
 
           <NavLink

@@ -7,12 +7,13 @@ import DeleteItem from '../DeleteItem';
 import UpdateSession from './UpdateAcademic';
 import SeeAllSession from './SeeAllAcademic';
 
-function AcademicTableRow({ index, data, setOriginalData }) {
+function AcademicTableRow({ index, data, setOriginalData,refetch}) {
   const navigate = useNavigate();
   const [isBeingProcessed, setIsBeingProcessed] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isEditModalOpen, setEditModalOpen] = useState(false);
   const [isSeeAllModalOpen, setSeeAllModalOpen] = useState(false);
+
 
   // Handle modal boxes
   const handleModal = () => {
@@ -31,11 +32,11 @@ function AcademicTableRow({ index, data, setOriginalData }) {
   const deleteHandle = async () => {
     try {
       setIsBeingProcessed(true);
-      const response = await customAxios.delete(`/Academic/Block/${data.AcademicId}`);
+      const response = await customAxios.delete(`/AcademicSession/Block/${data.SessionId}`);
       if (response.status == 200) {
         // Remove the deleted data from originalData
         setOriginalData((prev) =>
-          prev.filter((item) => item.AcademicId !== data.SessionId)
+          prev.filter((item) => item.SessionId !== data.SessionId)
         );
 
         handleModal();
@@ -57,6 +58,9 @@ function AcademicTableRow({ index, data, setOriginalData }) {
       if (response.status == 200) {
         const updatedData = await response.data;
 
+        
+        
+
         // Update the originalData with the updated entry
         setOriginalData((prev) =>
           prev.map((item) =>
@@ -75,9 +79,31 @@ function AcademicTableRow({ index, data, setOriginalData }) {
     }
   };
 
+  const switchSession = async (id) => {
+    try {
+        console.log("Switching session with data:", id); // Debugging log
+        setIsBeingProcessed(true);
+        const response = await customAxios.put('/AcademicSession/SetCurrentSession/'+id);
+        
+        if (response.status === 200) {
+            const updatedData = response.data; 
+            // updateAcademicSession(updatedData); // Ensure this function exists and updates state properly
+            showToast("Session switched successfully!", "success");
+            setEditModalOpen(!isEditModalOpen)
+            refetch();
+        }
+    } catch (error) {
+        console.error("Error switching session:", error.response?.data || error.message);
+        // showToast("Failed to switch session!", "error");
+    } finally {
+        setIsBeingProcessed(false);
+    }
+};
+
+
   return (
     <>
-      <tr>
+<tr className={`${data.IsSwitching ? 'bg-blue-200 font-bold' : data.IsCurrentSession ? 'bg-green-200 font-bold' : 'bg-white'}`}>
         <td className="px-3 py-5 whitespace-nowrap">{index + 1}</td>
         <td className="px-3 py-2 text-ellipsis whitespace-nowrap">
           {data?.SessionName?.length > 15 ? (`${data?.SessionName.slice(0, 15)} ...`) : (data?.SessionName)}</td>
@@ -93,12 +119,9 @@ function AcademicTableRow({ index, data, setOriginalData }) {
         <td className="px-3 py-2 whitespace-nowrap">{data?.SessionEndDateBs}</td>
 
         <td className="px-3 py-2 whitespace-nowrap ">
-          <span className={`p-4 w-full inline-flex justify-end text-base leading-5 font-semibold rounded-full ${data.IsActive ? 'bg-green-100' : 'bg-red-200'} text-black`}>{data.IsActive ? "Active" : "Blocked"}</span>
+          <span className={`p-4 w-full inline-flex justify-center text-base leading-5 font-semibold rounded-2xl ${data.IsActive ? 'bg-green-100' : 'bg-red-200'} text-black`}>{data.IsActive ? "Active" : "Blocked"}</span>
         </td>
-        <td className="px-3 py-2 whitespace-nowrap">
-          {data?.IsCurrentSession}
-        </td>
-        <td className="px-3 py-2 whitespace-nowrap">
+        <td className="px-3 py-2 whitespace-nowrap flex justify-start">
           {
             data.IsActive && (
               <button
@@ -126,12 +149,12 @@ function AcademicTableRow({ index, data, setOriginalData }) {
       </tr>
       <tr>
         {isModalOpen && <td>
-          <DeleteItem handleModal={handleModal} deleteHandle={deleteHandle} name={data?.SessionName} isBeingProcessed={isBeingProcessed} />
+          <DeleteItem handleModal={handleModal} deleteHandle={deleteHandle} isBeingProcessed={isBeingProcessed} />
         </td>
         }
 
         {isEditModalOpen && <td>
-          <UpdateSession handleEditModal={handleEditModal} data={data} updateHandle={updateHandle} isBeingProcessed={isBeingProcessed} />
+          <UpdateSession handleEditModal={handleEditModal} data={data} updateHandle={updateHandle} switchSession={switchSession} isBeingProcessed={isBeingProcessed} />
         </td>
         }
 
@@ -143,5 +166,4 @@ function AcademicTableRow({ index, data, setOriginalData }) {
     </>
   )
 }
-
 export default AcademicTableRow;

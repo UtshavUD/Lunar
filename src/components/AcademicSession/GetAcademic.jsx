@@ -4,9 +4,8 @@ import Loader from "../../utils/Loader";
 import { Link, useNavigate } from "react-router-dom";
 import handleCatchError from "../../utils/handleCatchError";
 import AcademicTableRow from "./AcademicTableRow";
-import OfficeCard from "./AcademicCard";
-import InsertOffice from "./InsertAcademic";
-import OfficeTableRow from "../office/OfficeTableRow";
+import InsertAcademic from "./InsertAcademic";
+import AcademicCard from "./AcademicCard";
 
 
 function GetAcademic() {
@@ -155,7 +154,7 @@ function GetAcademic() {
               </button>
             {
               isInsertModalOpen &&
-              <InsertOffice
+              <InsertAcademic
                   setOriginalData={setOriginalData}
                   setInsertModalOpen={setInsertModalOpen} />
             }
@@ -170,8 +169,8 @@ function GetAcademic() {
             </div>
           </div>
 
-          <div className="text-3xl text-center">
-            {showBlocked ? "Blocked" : "Active"} Academic Session
+          <div className="text-3xl text-center font-semibold font-serif mb-5">
+            Academic Session
           </div>
 
           <div className="flex justify-between items-center mt-4 mb-2 gap-4 flex-wrap w-full">
@@ -213,16 +212,16 @@ function GetAcademic() {
           </div>
 
           <table className="min-w-full divide-y divide-gray-200 hidden min-[750px]:table">
-            <thead>
+            <thead className="border">
               <tr>
-                <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Id</th>
-                <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
-                <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Start Date(A.D)</th>
-                <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">StartDate(B.S)</th>
-                <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">EndDate(A.D)</th>
-                <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">EndDate(B.S)</th>
-                <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-                <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Action</th>
+                <th className="px-3 p-4  text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Id</th>
+                <th className="px-3 p-4  text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
+                <th className="px-3 p-4  text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Start Date(A.D)</th>
+                <th className="px-3 p-4  text-left text-xs font-medium text-gray-500 uppercase tracking-wider">StartDate(B.S)</th>
+                <th className="px-3 p-4  text-left text-xs font-medium text-gray-500 uppercase tracking-wider">EndDate(A.D)</th>
+                <th className="px-3 p-4  text-left text-xs font-medium text-gray-500 uppercase tracking-wider">EndDate(B.S)</th>
+                <th className="px-3 p-4  text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                <th className="px-3 p-4  text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Action</th>
               </tr>
             </thead>
             <tbody className="bg-white divide-y divide-gray-200">
@@ -233,7 +232,8 @@ function GetAcademic() {
               ) : (
                 currentRows.map((data, index) => (
                   <AcademicTableRow
-                    key={data.OfficeId}
+                  refetch={fetchBlockedData}
+                    key={data.SessionId}
                     index={indexOfFirstRow + index}
                     data={data}
                     setOriginalData={setOriginalData}
@@ -255,8 +255,8 @@ function GetAcademic() {
               ) : (
                 currentRows.map((data, index) => {
                   return (
-                    <OfficeCard
-                      key={data.OfficeId}
+                    <AcademicCard
+                      key={data.SessionId}
                       index={indexOfFirstRow + index}
                       data={data}
                       setOriginalData={setOriginalData} />

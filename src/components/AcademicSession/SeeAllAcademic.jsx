@@ -4,30 +4,34 @@ function SeeAllOffice({ handleSeeAllModal, data, index }) {
 
     return (
         <>
-            <div className='fixed inset-0 z-20 bg-black bg-opacity-75 flex justify-center items-center'>
+            <div className='fixed inset-0 z-20 bg-black bg-opacity-80 flex justify-center items-center'>
                 <div className='relative sm:max-w-[50%]  max-h-[90vh] flex justify-center items-center p-4 mt-[64px]'>
                     {/* Card container */}
-                    <div className={`w-full bg-white border rounded-lg shadow-md p-6 m-4 
+                    <div className={`${data.IsCurrentSession ? 'bg-gradient-to-b from-green-200 via-green-300 to-green-500': 'bg-blue-200' } w-full border rounded-lg flex flex-col gap-4 shadow-md p-7 m-4 
                         overflow-y-auto max-h-[80vh] scrollbar-thin scrollbar-thumb-indigo-200 scrollbar-track-transparent`}>
                         <button
-                            className="absolute right-[10%] top-[7%] text-2xl text-indigo-700 font-extrabold hover:text-red-300"
+                            className="absolute right-[12%] top-[8%] text-2xl text-violet-950 font-extrabold hover:text-red-500"
                             onClick={handleSeeAllModal}>
                             X
                         </button>
-                        <h3 className="text-2xl font-semibold text-gray-800">
-                            {(`${index + 1}.   ${data?.OfficeName}`)}
+                        <h3 className="text-2xl font-semibold text-red-950 mt-2">
+                            {(`${index + 1}.   ${data?.SessionName}`)}
                         </h3>
-                        <div>
-                            <p className="text-gray-600 mt-2"><b>Office Short Name:</b> {data?.OfficeShortName}</p>
-                            <p className="text-gray-600 mt-2"><b>Office Address:</b> {data?.OfficeAddress}</p>
-                            <p className="text-gray-600 mt-2"><b>Establish Date:</b> {data?.EstdDate}</p>
-                            <p className="text-gray-600 mt-2"><b>Pan No:</b> {data?.Pan || "None"}</p>
-                            <p className="text-gray-600 mt-2"><b>Registration No:</b> {data?.RegistrationNo || "None"}</p>
+                        <div className='flex flex-col gap-1'>
+                            <p className=" mt-2"><b>Session Name:</b> {data?.SessionName}</p>
+                            <p className=" mt-2"><b>Start Date(B.S):</b> {data?.SessionStartDateBs}</p>
+                            <p className=" mt-2"><b>End Date(B.S):</b> {data?.SessionEndDateBs}</p>
+                            <p className=" mt-2"><b>Start Date(A.D):</b> {data?.SessionStartDate}</p>
+                            <p className=" mt-2"><b>End Date(A.D):</b> {data?.SessionEndDate}</p>
+                            <p className=" mt-2"><b>Current Session:</b> {data.IsCurrentSession ? "Yes": "No"}</p>
+                            <p className=" mt-2"><b>Is Active? :</b> {data.IsActive ? "Yes" : "None"}</p>
                         </div>
-                        <p className="text-gray-600 mt-2"><b>Office Email:</b> {data?.OfficeEmail}</p>
+
+
+                        {/* <p className="text-gray-600 mt-2"><b>Office Email:</b> {data?.OfficeEmail}</p>
                         <p className="text-gray-600 mt-2"><b>Phone Number:</b> {data?.OfficePhonePrimary}</p>
                         {/* For only viewAll */}
-                        <div>
+                        {/* <div>
                             <p className="text-gray-600 mt-2"><b>Secondary Phone Number:</b> {data?.OfficePhoneSecondary || "None"}</p>
                             <p className="text-gray-600 mt-2"><b>Moto:</b> {data?.Motto || "None"}</p>
                             <p className="text-gray-600 mt-2"><b>Website:</b> {data?.WebSite || "None"}</p>
@@ -36,7 +40,8 @@ function SeeAllOffice({ handleSeeAllModal, data, index }) {
                                 <p className=" mt-2"><b>Developed By:</b> {data?.DevelopedBy || "None"}</p>
                                 <p className=" mt-2"><b>Developer Site:</b> {data?.DeveloperSite || "None"}</p>
                             </div>
-                        </div>
+                        </div> */}
+
 
                         <div className="mt-4">
                             <span

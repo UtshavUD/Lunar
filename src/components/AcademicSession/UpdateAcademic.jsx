@@ -1,12 +1,13 @@
-import React, { useState, useEffect } from 'react';
-import { showToast } from '../../utils/ReactToast';
-import CLoader from '../../utils/CLoader';
+import React, { useState, useEffect } from "react";
+import { showToast } from "../../utils/ReactToast";
+import CLoader from "../../utils/CLoader";
 
-function UpdateAcademic({ handleEditModal, data, updateHandle, isBeingProcessed }) {
-    const [formData, setFormData] = useState(data || {}); // Ensure formData initializes properly
+function UpdateAcademic({ handleEditModal, data, updateHandle, switchSession }) {
+    const [formData, setFormData] = useState(data || {});
+    const [isBeingProcessed, setIsBeingProcessed] = useState(false);
 
     useEffect(() => {
-        setFormData(data); // Sync formData when new data is passed
+        setFormData(data);
     }, [data]);
 
     const formFields = [
@@ -16,31 +17,42 @@ function UpdateAcademic({ handleEditModal, data, updateHandle, isBeingProcessed 
     ];
 
     const handleChange = (e) => {
-        setFormData(prevState => ({
+        setFormData((prevState) => ({
             ...prevState,
-            [e.target.name]: e.target.value
+            [e.target.name]: e.target.value,
         }));
     };
 
-    const submitUpdate = (e) => {
+    const submitUpdate = async (e) => {
         e.preventDefault();
 
         // Check required fields
-        const missingField = formFields.find(field => field.required && !formData[field.name]?.trim());
+        const missingField = formFields.find((field) => field.required && !formData[field.name]?.trim());
         if (missingField) {
-            showToast(`"${missingField.label}" is required!`, 'error');
+            showToast(`"${missingField.label}" is required!`, "error");
             return;
         }
 
-        // Call update function
-        updateHandle(formData);
+        setIsBeingProcessed(true);
+        await updateHandle(formData);
+        setIsBeingProcessed(false);
     };
 
+    const handleSwitchSession = () => {
+        console.log("switchSession function:", switchSession); // Debugging line
+        if (!switchSession) {
+            showToast("Switch session function is not available!", "error");
+            return;
+        }
+        switchSession(formData.SessionId); 
+    };
+    
+
     return (
-        <div className='fixed inset-0 z-20 bg-black bg-opacity-75 flex justify-center items-center'>
-            <div className='flex mx-auto w-full justify-center mt-[64px] max-h-[100%]'>
-                <div className='w-full border sm:max-w-xl bg-white m-4 p-4 sm:m-10 overflow-y-auto scrollbar-thin scrollbar-thumb-indigo-200 scrollbar-track-transparent'>
-                    <div className='flex justify-end'>
+        <div className="fixed inset-0 z-20 bg-black bg-opacity-75 flex justify-center items-center">
+            <div className="flex mx-auto w-full justify-center mt-[64px] max-h-[100%]">
+                <div className="w-full border sm:max-w-xl bg-white m-4 p-4 sm:m-10 overflow-y-auto scrollbar-thin scrollbar-thumb-indigo-200 scrollbar-track-transparent">
+                    <div className="flex justify-end">
                         <button
                             className="close-btn text-2xl text-indigo-700 font-extrabold hover:text-red-300"
                             onClick={handleEditModal}
@@ -70,17 +82,34 @@ function UpdateAcademic({ handleEditModal, data, updateHandle, isBeingProcessed 
                                     />
                                 </div>
                             ))}
-                            <div className="md:col-span-2 flex flex-wrap justify-end gap-4">
+
+                            {/* Switch Session Button */}
+                            <div className="md:col-span-2 flex flex-wrap justify-between gap-4">
                                 {isBeingProcessed ? (
                                     <CLoader />
                                 ) : (
                                     <button
-                                        type="submit"
+                                        type="button"
+                                        onClick={handleSwitchSession}
                                         className="px-6 py-3 bg-blue-900 text-white text-sm rounded-lg shadow-lg hover:bg-green-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all duration-300"
                                     >
-                                        Update
+                                        Switch
                                     </button>
                                 )}
+
+                                {/* Action Buttons */}
+                                <div>
+                                    {isBeingProcessed ? (
+                                        <CLoader />
+                                    ) : (
+                                        <button
+                                            type="submit"
+                                            className="px-6 py-3 bg-blue-900 text-white text-sm rounded-lg shadow-lg hover:bg-green-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all duration-300"
+                                        >
+                                            Update
+                                        </button>
+                                    )}
+                                </div>
                             </div>
                         </form>
                     </div>
