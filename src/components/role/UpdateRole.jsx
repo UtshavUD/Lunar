@@ -37,7 +37,7 @@ function UpdateRole({ handleEditModal, data, updateHandle, isBeingProcessed }) {
                                     <label htmlFor="RoleName" className="block text-lg font-medium text-gray-800 mb-1">
                                         Role Name
                                     </label>
-                                    <input
+                                    <input 
                                         type="text"
                                         id="RoleName"
                                         name="RoleName"

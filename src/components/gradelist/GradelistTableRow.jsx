@@ -4,10 +4,10 @@ import customAxios from '../../utils/http';
 import { showToast } from '../../utils/ReactToast';
 import handleCatchError from '../../utils/handleCatchError';
 import DeleteItem from '../DeleteItem';
-import UpdateSession from './UpdateAcademic';
-import SeeAllSession from './SeeAllAcademic';
+import UpdateSession from './UpdateGradelist';
+import SeeAllSession from './SeeAllGradelist';
 
-function AcademicTableRow({ index, data, setOriginalData,refetch}) {
+function GradelistTableRow({ index, data, setOriginalData}) {
   const navigate = useNavigate();
   const [isBeingProcessed, setIsBeingProcessed] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -32,11 +32,11 @@ function AcademicTableRow({ index, data, setOriginalData,refetch}) {
   const deleteHandle = async () => {
     try {
       setIsBeingProcessed(true);
-      const response = await customAxios.delete(`/AcademicSession/Block/${data.SessionId}`);
+      const response = await customAxios.delete(`/GradeList/Block/${data.GradeId}`);
       if (response.status == 200) {
         // Remove the deleted data from originalData
         setOriginalData((prev) =>
-          prev.filter((item) => item.SessionId !== data.SessionId)
+          prev.filter((item) => item.GradeId !== data.GradeId)
         );
 
         handleModal();
@@ -54,9 +54,9 @@ function AcademicTableRow({ index, data, setOriginalData,refetch}) {
   const updateHandle = async (formData) => {
     try {
       setIsBeingProcessed(true);
-      const response = await customAxios.put('/AcademicSession/Update', formData);
+      const response = await customAxios.put('/GradeList/Update', formData);
       if (response.status == 200) {
-        const updatedData = await response.data;
+        const updatedData = response.data;
 
         
         
@@ -64,12 +64,12 @@ function AcademicTableRow({ index, data, setOriginalData,refetch}) {
         // Update the originalData with the updated entry
         setOriginalData((prev) =>
           prev.map((item) =>
-            item.SessionId === updatedData.SessionId ? updatedData : item
+            item.GradeId === updatedData.GradeId ? updatedData : item
           )
         );
 
         handleEditModal();
-        showToast("Session Updated Successfully", "success");
+        showToast("GradeList Updated Successfully", "success");
       }
     } catch (error) {
       handleCatchError(error, navigate);
@@ -79,45 +79,28 @@ function AcademicTableRow({ index, data, setOriginalData,refetch}) {
     }
   };
 
-  const switchSession = async (id) => {
-    try {
-        console.log("Switching session with data:", id); // Debugging log
-        setIsBeingProcessed(true);
-        const response = await customAxios.put('/AcademicSession/SetCurrentSession/'+id);
-        
-        if (response.status === 200) {
-            
-            // updateAcademicSession(updatedData); // Ensure this function exists and updates state properly
-            showToast("Session switched successfully!", "success");
-            setEditModalOpen(!isEditModalOpen)
-            refetch();
-            
-        }
-    } catch (error) {
-        console.error("Error switching session:", error.response?.data || error.message);
-        // showToast("Failed to switch session!", "error");
-    } finally {
-        setIsBeingProcessed(false);
-    }
-};
-
-
   return (
     <>
-<tr className={`${data.IsSwitching ? 'bg-blue-200 font-bold' : data.IsCurrentSession ? 'bg-green-200 font-bold' : 'bg-white'}`}>
+<tr>
         <td className="px-3 py-5 whitespace-nowrap">{index + 1}</td>
         <td className="px-3 py-2 text-ellipsis whitespace-nowrap">
-          {data?.SessionName?.length > 15 ? (`${data?.SessionName.slice(0, 15)} ...`) : (data?.SessionName)}</td>
+          {data?.GradeName?.length > 15 ? (`${data?.GradeName.slice(0, 15)} ...`) : (data?.GradeName)}</td>
           
         <td className="px-3 py-2 text-ellipsis whitespace-nowrap">
-          {data?.SessionStartDate?.length > 15 ? (`${data?.SessionStartDate.slice(0, 15)} ...`) : (data?.SessionStartDate)}
+          {data?.AreaName?.length > 15 ? (`${data?.AreaName.slice(0, 15)} ...`) : (data?.AreaName)}
         </td>
 
         <td className="px-3 py-2 text-ellipsis whitespace-nowrap">
-          {data?.SessionStartDateBs?.length > 15 ? (`${data?.SessionStartDateBs.slice(0, 15)} ...`) : (data?.SessionStartDateBs)}
+          {data?.LevelName?.length > 15 ? (`${data?.LevelName.slice(0, 15)} ...`) : (data?.LevelName)}
         </td>
-        <td className="px-3 py-2 whitespace-nowrap">{data?.SessionEndDate}</td>
-        <td className="px-3 py-2 whitespace-nowrap">{data?.SessionEndDateBs}</td>
+        <td className="px-3 py-2 text-ellipsis whitespace-nowrap">
+          {data?.LevelName?.length > 15 ? (`${data?.TheoryPassPercent.slice(0, 15)} ...`) : (data?.TheoryPassPercent)}
+        </td>
+        <td className="px-3 py-2 text-ellipsis whitespace-nowrap">
+          {data?.LevelName?.length > 15 ? (`${data?.PracticalPassPercent.slice(0, 15)} ...`) : (data?.PracticalPassPercent)}
+        </td>
+        <td className="px-3 py-2 whitespace-nowrap">{data?.GradeSheetCaption}</td>
+        <td className="px-3 py-2 whitespace-nowrap">{data?.MarkSheetCaption}</td>
 
         <td className="px-3 py-2 whitespace-nowrap ">
           <span className={`p-4 w-full inline-flex justify-center text-base leading-5 font-semibold rounded-2xl ${data.IsActive ? 'bg-green-100' : 'bg-red-200'} text-black`}>{data.IsActive ? "Active" : "Blocked"}</span>
@@ -150,12 +133,12 @@ function AcademicTableRow({ index, data, setOriginalData,refetch}) {
       </tr>
       <tr>
         {isModalOpen && <td>
-          <DeleteItem handleModal={handleModal} deleteHandle={deleteHandle} name={data.SessionName} isBeingProcessed={isBeingProcessed} />
+          <DeleteItem handleModal={handleModal} deleteHandle={deleteHandle} name={data.GradeName} isBeingProcessed={isBeingProcessed} />
         </td>
         }
 
         {isEditModalOpen && <td>
-          <UpdateSession handleEditModal={handleEditModal} data={data} updateHandle={updateHandle} switchSession={switchSession} isBeingProcessed={isBeingProcessed} />
+          <UpdateSession handleEditModal={handleEditModal} data={data} updateHandle={updateHandle} isBeingProcessed={isBeingProcessed} />
         </td>
         }
 
@@ -167,4 +150,4 @@ function AcademicTableRow({ index, data, setOriginalData,refetch}) {
     </>
   )
 }
-export default AcademicTableRow;
+export default GradelistTableRow;

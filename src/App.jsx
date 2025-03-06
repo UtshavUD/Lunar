@@ -44,6 +44,8 @@ import LazyLoader from './utils/LazyLoader';
 import { AuthProvider } from './contexts/AuthContext';
 import AuthWrapper from './routes/AuthWrapper';
 import AcademicSession from './components/AcademicSession/GetAcademic';
+import GetGradelist from './components/gradelist/GetGradelist';
+import GetGradingRule from './components/GradingRule/GetGradingRule';
 
 function App() {
   return (
@@ -69,6 +71,9 @@ function App() {
               <Route path='office' element={<GetOffice />}  />
               <Route path='person' element={<GetPerson />}  />
               <Route path='AcademicSession' element={<AcademicSession/>}/>
+              <Route path='GradeList' element={<GetGradelist/>}/>
+              <Route path='GradingRule' element={<GetGradingRule/>}/>
+              
 
               {/* For Setting */}
               <Route path='setting/'>

@@ -3,13 +3,13 @@ import customAxios from "../../utils/http";
 import Loader from "../../utils/Loader";
 import { Link, useNavigate } from "react-router-dom";
 import handleCatchError from "../../utils/handleCatchError";
-import AcademicTableRow from "./AcademicTableRow";
-import InsertAcademic from "./InsertAcademic";
-import AcademicCard from "./AcademicCard";
+import InsertGradelist from "./InsertGradelist";
+import GradelistTableRow from "./GradelistTableRow";
+import GradelistCard from "./GradelistCard";
 
 
 
-function GetAcademic() {
+function GetGradelist() {
   const navigate = useNavigate();
 
   const [originalData, setOriginalData] = useState([]); // Store original data
@@ -31,7 +31,7 @@ function GetAcademic() {
   const fetchActiveData = async () => {
     try {
       setIsLoading(true);
-      const response = await customAxios.get(`/AcademicSession/GetList`);
+      const response = await customAxios.get(`/GradeList/GetList`);
       const data = await response.data;
       console.log(data)
       setOriginalData(data);
@@ -47,7 +47,7 @@ function GetAcademic() {
   const fetchBlockedData = async () => {
     try {
       setIsLoading(true);
-      const response = await customAxios.get(`/AcademicSession/GetList/true`);
+      const response = await customAxios.get(`/GradeList/GetList/true`);
       const data = await response.data;
       setOriginalData(data);
       setFilteredData(data.filter((item) => !item.IsActive));
@@ -74,7 +74,7 @@ function GetAcademic() {
   };
 
   useEffect(() => {
-    document.title = "Academic List";
+    document.title = "Grade-List";
     fetchActiveData();
   }, []);
 
@@ -91,19 +91,23 @@ function GetAcademic() {
   const handleSearch = (e) => {
     const query = e.target.value.toLowerCase();
     setSearchQuery(query);
-
+  
     const baseData = showBlocked
       ? originalData.filter((item) => !item.IsActive)
       : originalData.filter((item) => item.IsActive);
-
+  
     const filtered = baseData.filter((item) =>
       Object.values(item).some((value) =>
-        value.toString().toLowerCase().includes(query)
+        String(value || "").toLowerCase().includes(query)
       )
     );
+  
+    console.log("Filtered Data:", filtered);
+  
     setFilteredData(filtered);
     setCurrentPage(1);
   };
+  
 
   const handleFilterAndSort = () => {
     let updatedData = [...filteredData];
@@ -155,7 +159,7 @@ function GetAcademic() {
               </button>
             {
               isInsertModalOpen &&
-              <InsertAcademic
+              <InsertGradelist
                   setOriginalData={setOriginalData}
                   setInsertModalOpen={setInsertModalOpen} />
             }
@@ -171,7 +175,7 @@ function GetAcademic() {
           </div>
 
           <div className="text-3xl text-center font-semibold font-serif mb-5">
-            Academic Session
+            Grade-List
           </div>
 
           <div className="flex justify-between items-center mt-4 mb-2 gap-4 flex-wrap w-full">
@@ -190,14 +194,17 @@ function GetAcademic() {
               <option value="default" disabled>
                 --Filter by Column--
               </option>
-              <option value="SessionId">Id</option>
-              <option value="SessionName">Name</option>
-              <option value="SessionStartDate">StartDate</option>
-              <option value="SessionStartDateBs">StartDateBs</option>
-              <option value="SessionEndDate">EndDate</option> 
-              <option value="SessionEndDateBs">EndDateBs</option>
+              <option value="GradeId">Id</option>
+              <option value="GradeName">GradeName</option>
+              <option value="AreaName">AreaName</option>
+              <option value="LevelName">LevelName</option>
+              <option value="TheoryPassPercent">Theory Pass%</option>
+              <option value="PracticalPassPercent">Practical Pass%</option>
+
+              <option value="GradeSheetCaption">GradeSheeet Caption</option> 
+              <option value="MarkSheetCaption">MarkSheet Caption</option>
+
               <option value="IsActive">Status</option>
-              <option value="IsCurrentSession">CurrentSession</option>
               
             
             </select>
@@ -216,13 +223,15 @@ function GetAcademic() {
             <thead className="border">
               <tr>
                 <th className="px-3 p-4  text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Id</th>
-                <th className="px-3 p-4  text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
-                <th className="px-3 p-4  text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Start Date(A.D)</th>
-                <th className="px-3 p-4  text-left text-xs font-medium text-gray-500 uppercase tracking-wider">StartDate(B.S)</th>
-                <th className="px-3 p-4  text-left text-xs font-medium text-gray-500 uppercase tracking-wider">EndDate(A.D)</th>
-                <th className="px-3 p-4  text-left text-xs font-medium text-gray-500 uppercase tracking-wider">EndDate(B.S)</th>
-                <th className="px-3 p-4  text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-                <th className="px-3 p-4  text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Action</th>
+                <th className="px-3 p-4  text-left text-xs font-medium text-gray-500 uppercase">Grade Name</th>
+                <th className="px-3 p-4  text-left text-xs font-medium text-gray-500 uppercase">Area Name</th>
+                <th className="px-3 p-4  text-left text-xs font-medium text-gray-500 uppercase">Level Name</th>
+                <th className="px-3 p-4  text-left text-xs font-medium text-gray-500 uppercase">(th)Pass%</th>
+                <th className="px-3 p-4  text-left text-xs font-medium text-gray-500 uppercase">(pr)Pass%</th>
+                <th className="px-3 p-4  text-left text-xs font-medium text-gray-500 uppercase">Grade-Sheet Caption</th>
+                <th className="px-3 p-4  text-left text-xs font-medium text-gray-500 uppercase">Mark-Sheet Caption</th>
+                <th className="px-3 p-4  text-left text-xs font-medium text-gray-500 uppercase">Status</th>
+                <th className="px-3 p-4  text-left text-xs font-medium text-gray-500 uppercase ">Action</th>
               </tr>
             </thead>
             <tbody className="bg-white divide-y divide-gray-200">
@@ -232,9 +241,9 @@ function GetAcademic() {
                 </tr>
               ) : (
                 currentRows.map((data, index) => (
-                  <AcademicTableRow
+                  <GradelistTableRow
                   refetch={fetchBlockedData}
-                    key={data.SessionId}
+                    key={data.GradeId}
                     index={indexOfFirstRow + index}
                     data={data}
                     setOriginalData={setOriginalData}
@@ -256,7 +265,7 @@ function GetAcademic() {
               ) : (
                 currentRows.map((data, index) => {
                   return (
-                    <AcademicCard
+                    <GradelistCard
                       key={data.SessionId}
                       index={indexOfFirstRow + index}
                       data={data}
@@ -302,4 +311,4 @@ function GetAcademic() {
   );
 }
 
-export default GetAcademic;
+export default GetGradelist;

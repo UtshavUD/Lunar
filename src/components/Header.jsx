@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { showToast } from "../utils/ReactToast";
 import { useAuth } from "../contexts/AuthContext";
+import Lunar from '/Lunar.png'
+
 
 const Header = () => {
   const {logout} = useAuth();
@@ -57,7 +59,7 @@ const Header = () => {
         <div className="flex items-center space-x-2 relative">
           <img
             className="w-10 h-10 rounded-full transition-transform duration-300 hover:scale-110 object-cover cursor-pointer"
-            src="https://i.pinimg.com/564x/de/0f/3d/de0f3d06d2c6dbf29a888cf78e4c0323.jpg"
+            src={Lunar}
             alt="Profile"
             onMouseEnter={toggleProfileMenu}
             onClick={toggleProfileMenu}
@@ -70,7 +72,7 @@ const Header = () => {
               <div className="flex items-center mb-4">
                 <img
                   className="w-12 h-12 rounded-full object-cover mr-3"
-                  src="https://i.pinimg.com/564x/de/0f/3d/de0f3d06d2c6dbf29a888cf78e4c0323.jpg"
+                  src={Lunar}
                   alt="Admin"
                 />
                 <div>

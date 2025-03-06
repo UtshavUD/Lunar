@@ -68,18 +68,6 @@ const Sidebar = () => {
           </NavLink>
 
           <NavLink
-          
-            to="/AcademicSession"
-            className={({ isActive }) =>
-              `flex items-center cursor-pointer py-4 transition-all text-[15px] duration-300 hover:translate-x-1 ${isActive ? "text-indigo-800 font-bold text-[15px]" : "text-gray-600"
-              }`
-            } 
-          >
-            <i className="bx bx-book-open mr-2 text-2xl" />
-             Academic
-          </NavLink>
-
-          <NavLink
             to="/personCategory"
             className={({ isActive }) =>
               `flex items-center cursor-pointer py-4 transition-all text-[15px] duration-300 hover:translate-x-1 ${isActive ? "text-indigo-800 font-bold text-[15px]" : "text-gray-600"
@@ -91,6 +79,46 @@ const Sidebar = () => {
           </NavLink>
 
         </div>
+
+
+
+        <div className="bg-white rounded-xl shadow-lg mb-6 p-4 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl">
+
+        <NavLink
+          to="/AcademicSession"
+          className={({ isActive }) =>
+            `flex items-center cursor-pointer py-4 transition-all text-[15px] duration-300 hover:translate-x-1 ${isActive ? "text-indigo-800 font-bold text-[15px]" : "text-gray-600"
+            }`
+          } 
+        >
+          <i className="bx bx-book-open mr-2 text-2xl" />
+           Academic
+        </NavLink>
+
+        <NavLink
+        
+        to="/Gradelist"
+        className={({ isActive }) =>
+          `flex items-center cursor-pointer py-4 transition-all text-[15px] duration-300 hover:translate-x-1 ${isActive ? "text-indigo-800 font-bold text-[15px]" : "text-gray-600"
+          }`
+        } 
+      >
+        <i className="bx bx-clipboard mr-2 text-2xl" />
+         Grade List
+      </NavLink>
+
+      <NavLink
+        to="/GradingRule"
+        className={({ isActive }) =>
+          `flex items-center cursor-pointer py-4 transition-all text-[15px] duration-300 hover:translate-x-1 ${isActive ? "text-indigo-800 font-bold text-[15px]" : "text-gray-600"
+          }`
+        } 
+      >
+        <i className="bx bx-table mr-2 text-2xl" />
+         Grading Rule
+      </NavLink>
+          </div>
+
 
         {/* Third Section */}
         <div className="bg-white rounded-xl shadow-lg mb-6 p-4 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl">

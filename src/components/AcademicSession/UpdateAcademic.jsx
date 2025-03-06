@@ -88,13 +88,12 @@ function UpdateAcademic({ handleEditModal, data, updateHandle, switchSession }) 
                                     <button
                                         type="button"
                                         onClick={handleSwitchSession}
-                                        className="px-6 py-3 flex items-center gap-1 bg-blue-900 text-white text-md rounded-lg shadow-lg hover:bg-green-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all duration-300"
+                                        className="px-6 py-3 flex items-center gap-2 bg-blue-900 text-white text-md rounded-lg shadow-lg hover:bg-yellow-200 hover:border border-black hover:text-black hover:font-semibold focus:outline-none focus:ring-4 focus:ring-offset-2 focus:ring-blue-200 transition-all duration-200"
                                     ><i class='bx bx-toggle-left text-lg'></i>
                                         Switch
                                     </button>
                                 
-
-                                {/* Action Buttons */}
+                                {/* Upadate Buttons */}
                                 <div>
                                     {isBeingProcessed ? (
                                         <CLoader />
@@ -102,7 +101,7 @@ function UpdateAcademic({ handleEditModal, data, updateHandle, switchSession }) 
                                         <button
                                             type="submit"
                                             onClick={submitUpdate}
-                                            className="flex items-center gap-1 px-6 py-3 bg-blue-900 text-white text-md rounded-lg shadow-lg hover:bg-green-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all duration-300"
+                                            className="flex items-center gap-2 px-6 py-3 bg-blue-900 text-white text-md rounded-lg shadow-lg hover:bg-green-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all duration-300"
                                         ><i class='bx bx-upload text-lg'></i>
                                             Update
                                         </button>

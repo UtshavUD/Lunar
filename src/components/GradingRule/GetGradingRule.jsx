@@ -3,13 +3,13 @@ import customAxios from "../../utils/http";
 import Loader from "../../utils/Loader";
 import { Link, useNavigate } from "react-router-dom";
 import handleCatchError from "../../utils/handleCatchError";
-import AcademicTableRow from "./AcademicTableRow";
-import InsertAcademic from "./InsertAcademic";
-import AcademicCard from "./AcademicCard";
+import GradinglistTableRow from "./GradinglistTableRow";
+import GradingRuleCard from "./GradingRuleCard";
+import InsertGradingRule from "./InsertGradingRule";
 
 
 
-function GetAcademic() {
+function GetGradingRule() {
   const navigate = useNavigate();
 
   const [originalData, setOriginalData] = useState([]); // Store original data
@@ -31,7 +31,7 @@ function GetAcademic() {
   const fetchActiveData = async () => {
     try {
       setIsLoading(true);
-      const response = await customAxios.get(`/AcademicSession/GetList`);
+      const response = await customAxios.get(`/GradingRule/GetList`);
       const data = await response.data;
       console.log(data)
       setOriginalData(data);
@@ -47,7 +47,7 @@ function GetAcademic() {
   const fetchBlockedData = async () => {
     try {
       setIsLoading(true);
-      const response = await customAxios.get(`/AcademicSession/GetList/true`);
+      const response = await customAxios.get(`/GradingRule/GetList/true`);
       const data = await response.data;
       setOriginalData(data);
       setFilteredData(data.filter((item) => !item.IsActive));
@@ -74,7 +74,7 @@ function GetAcademic() {
   };
 
   useEffect(() => {
-    document.title = "Academic List";
+    document.title = "Grading-List";
     fetchActiveData();
   }, []);
 
@@ -91,19 +91,23 @@ function GetAcademic() {
   const handleSearch = (e) => {
     const query = e.target.value.toLowerCase();
     setSearchQuery(query);
-
+  
     const baseData = showBlocked
       ? originalData.filter((item) => !item.IsActive)
       : originalData.filter((item) => item.IsActive);
-
+  
     const filtered = baseData.filter((item) =>
       Object.values(item).some((value) =>
-        value.toString().toLowerCase().includes(query)
+        String(value || "").toLowerCase().includes(query)
       )
     );
+  
+    console.log("Filtered Data:", filtered);
+  
     setFilteredData(filtered);
     setCurrentPage(1);
   };
+  
 
   const handleFilterAndSort = () => {
     let updatedData = [...filteredData];
@@ -128,6 +132,7 @@ function GetAcademic() {
     }
 
     setFilteredData(updatedData);
+    console.log("Updated data:", updatedData);
     setCurrentPage(1);
   };
 
@@ -155,7 +160,7 @@ function GetAcademic() {
               </button>
             {
               isInsertModalOpen &&
-              <InsertAcademic
+              <InsertGradingRule
                   setOriginalData={setOriginalData}
                   setInsertModalOpen={setInsertModalOpen} />
             }
@@ -171,7 +176,7 @@ function GetAcademic() {
           </div>
 
           <div className="text-3xl text-center font-semibold font-serif mb-5">
-            Academic Session
+            Grading-List
           </div>
 
           <div className="flex justify-between items-center mt-4 mb-2 gap-4 flex-wrap w-full">
@@ -190,14 +195,8 @@ function GetAcademic() {
               <option value="default" disabled>
                 --Filter by Column--
               </option>
-              <option value="SessionId">Id</option>
-              <option value="SessionName">Name</option>
-              <option value="SessionStartDate">StartDate</option>
-              <option value="SessionStartDateBs">StartDateBs</option>
-              <option value="SessionEndDate">EndDate</option> 
-              <option value="SessionEndDateBs">EndDateBs</option>
-              <option value="IsActive">Status</option>
-              <option value="IsCurrentSession">CurrentSession</option>
+              <option value="RuleId">Id</option>
+              <option value="RuleName">Rule Name</option>
               
             
             </select>
@@ -213,36 +212,42 @@ function GetAcademic() {
           </div>
 
           <table className="min-w-full divide-y divide-gray-200 hidden min-[750px]:table">
-            <thead className="border">
-              <tr>
-                <th className="px-3 p-4  text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Id</th>
-                <th className="px-3 p-4  text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
-                <th className="px-3 p-4  text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Start Date(A.D)</th>
-                <th className="px-3 p-4  text-left text-xs font-medium text-gray-500 uppercase tracking-wider">StartDate(B.S)</th>
-                <th className="px-3 p-4  text-left text-xs font-medium text-gray-500 uppercase tracking-wider">EndDate(A.D)</th>
-                <th className="px-3 p-4  text-left text-xs font-medium text-gray-500 uppercase tracking-wider">EndDate(B.S)</th>
-                <th className="px-3 p-4  text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-                <th className="px-3 p-4  text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Action</th>
-              </tr>
-            </thead>
-            <tbody className="bg-white divide-y divide-gray-200">
-              {currentRows.length === 0 ? (
-                <tr>
-                  <td colSpan={7}>No data available</td>
-                </tr>
-              ) : (
-                currentRows.map((data, index) => (
-                  <AcademicTableRow
-                  refetch={fetchBlockedData}
-                    key={data.SessionId}
-                    index={indexOfFirstRow + index}
-                    data={data}
-                    setOriginalData={setOriginalData}
-                  />
-                ))
-              )}
-            </tbody>
-          </table>
+  <thead className="border">
+    <tr>
+      <th rowSpan={2} className="px-3 p-4 text-center text-xs font-medium text-gray-500 uppercase tracking-wider border border-black">Id</th>
+      <th rowSpan={2} className="px-3 p-4 text-left text-xs font-medium text-gray-500 uppercase border border-black">Rule Name</th>
+      <th colSpan={4} className="px-3 p-4 text-center text-xs font-medium text-gray-500 uppercase border border-black">Rule Items</th>
+      <th rowSpan={2} className="px-3 p-4 text-center text-xs font-medium text-gray-500 uppercase border border-black">Action</th>
+    </tr>
+    <tr>
+    <th className="px-3 p-4 text-left text-xs font-medium text-gray-500 uppercase border border-black">Grading Name</th>
+      <th className="px-3 p-4 text-left text-xs font-medium text-gray-500 uppercase border border-black">Grading Point</th>
+      <th className="px-3 p-4 text-left text-xs font-medium text-gray-500 uppercase border border-black">Remarks</th>
+      <th className="px-3 p-4 text-left text-xs font-medium text-gray-500 uppercase border border-black">Lower Limit</th>
+    </tr>
+  </thead>
+
+  <tbody className="bg-white divide-y divide-gray-200"> 
+    {currentRows.length === 0 ? (
+      <tr>
+        <td colSpan={8} className="text-center py-4 text-gray-500">
+          No data available
+        </td>
+      </tr>
+    ) : (
+      currentRows.map((data, index) => (
+        <GradinglistTableRow
+          refetch={fetchBlockedData}
+          key={data.RuleId} // Ensure this matches the correct ID from the API
+          index={indexOfFirstRow + index}
+          data={data}
+          setOriginalData={setOriginalData}
+        />
+      ))
+    )}
+  </tbody>
+</table>
+
 
           {/* Card view for mobile */}
           <div className="visible min-[750px]:hidden flex flex-col">
@@ -256,8 +261,8 @@ function GetAcademic() {
               ) : (
                 currentRows.map((data, index) => {
                   return (
-                    <AcademicCard
-                      key={data.SessionId}
+                    <GradingRuleCard
+                      key={data.RuleId}
                       index={indexOfFirstRow + index}
                       data={data}
                       setOriginalData={setOriginalData} />
@@ -302,4 +307,4 @@ function GetAcademic() {
   );
 }
 
-export default GetAcademic;
+export default GetGradingRule;
